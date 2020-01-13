@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCamStream", "WebCamStream.csproj", "{820F6012-04DB-4310-8A06-432E64EB1D12}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{820F6012-04DB-4310-8A06-432E64EB1D12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{820F6012-04DB-4310-8A06-432E64EB1D12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{820F6012-04DB-4310-8A06-432E64EB1D12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{820F6012-04DB-4310-8A06-432E64EB1D12}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CAA703E6-B8D9-4229-A1C0-F681E1C270C2}
+	EndGlobalSection
+EndGlobal
