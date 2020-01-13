@@ -35,7 +35,7 @@ namespace WebCamStream
         public Image Image { get; set; }
         public BitmapImage BitImage { get; set; } 
         private SynchronizationContext context = SynchronizationContext.Current;
-        AForge.Video.DirectShow.VideoCaptureDevice videoCaptureDevice;
+        private VideoCaptureDevice videoCaptureDevice;
         public MainWindow()
         {
             InitializeComponent();
@@ -58,7 +58,6 @@ namespace WebCamStream
 
         private void ApplyImage(object o)
         {
-
             BitmapImage btm = new BitmapImage();
             using (MemoryStream memStream2 = new MemoryStream())
             {
@@ -70,10 +69,7 @@ namespace WebCamStream
                 btm.StreamSource = memStream2;
                 btm.EndInit();
             }
-
             BitImage = btm;
-
-
         }
 
         private void Window_Closed(object sender, EventArgs e)
