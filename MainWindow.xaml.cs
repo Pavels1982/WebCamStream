@@ -1,4 +1,6 @@
 ﻿using AForge.Video.DirectShow;
+using OpenCvSharp;
+using OpenCvSharp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,11 +28,15 @@ namespace WebCamStream
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : System.Windows.Window, INotifyPropertyChanged
     {
         public byte[] _bufImage;
 
         public event PropertyChangedEventHandler PropertyChanged;
+        VideoCapture capture;
+        Mat frame;
+        Bitmap image;
+        Thread videoTread;
 
         public Image Image { get; set; }
         public BitmapImage BitImage { get; set; } 
@@ -38,20 +44,48 @@ namespace WebCamStream
         private VideoCaptureDevice videoCaptureDevice;
         public MainWindow()
         {
+
             InitializeComponent();
             this.DataContext = this;
             BitImage = new BitmapImage();
-            videoCaptureDevice = new AForge.Video.DirectShow.VideoCaptureDevice();
-            videoCaptureDevice.NewFrame += VideoCaptureDevice_NewFrame;
-            var videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            videoCaptureDevice.Source = videoDevices[0].MonikerString;
-            videoCaptureDevice.Start();
+
+          
+
+            videoTread = new Thread(GetVideo);
+
+            videoTread.Start();
+            //videoCaptureDevice = new AForge.Video.DirectShow.VideoCaptureDevice();
+            //videoCaptureDevice.NewFrame += VideoCaptureDevice_NewFrame;
+            //var videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            //videoCaptureDevice.Source = videoDevices[0].MonikerString;
+            //videoCaptureDevice.Start();
         }
 
-        private void VideoCaptureDevice_NewFrame(object sender, AForge.Video.NewFrameEventArgs eventArgs)
+        private void GetVideo()
         {
-            context.Post(ApplyImage, (Image)eventArgs.Frame.Clone());
+            frame = new Mat();
+            VideoCapture capture = new VideoCapture(0);
+            capture.Open(0);
+            while (true)
+            {
+                if (capture != null)
+                {
+                    capture.Read(frame);
+                    image = BitmapConverter.ToBitmap(frame);
+                    context.Post(ApplyImage, image);
+                }
+            }
+
+           
+
         }
+
+       
+
+        //private void VideoCaptureDevice_NewFrame(object sender, AForge.Video.NewFrameEventArgs eventArgs)
+        //{
+        //    context.Post(ApplyImage, (Image)eventArgs.Frame.Clone());
+        //}
 
 
 
@@ -61,7 +95,7 @@ namespace WebCamStream
             BitmapImage btm = new BitmapImage();
             using (MemoryStream memStream2 = new MemoryStream())
             {
-                (o as Image).Save(memStream2, System.Drawing.Imaging.ImageFormat.Png);
+                (o as Bitmap).Save(memStream2, System.Drawing.Imaging.ImageFormat.Png);
                 memStream2.Position = 0;
                 btm.BeginInit();
                 btm.CacheOption = BitmapCacheOption.OnLoad;
@@ -74,7 +108,7 @@ namespace WebCamStream
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            videoCaptureDevice.Stop();
+            videoTread.Abort();
             System.Windows.Application.Current.Shutdown();
         }
     }
